@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Wicked - La Película</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Bootstrap CSS para el Carrusel/Galería -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <style>
+    @font-face {
+      font-family: 'OpenSauceSans-Regular';
+      src: local('Sans-Serif');
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'OpenSauceSans-Regular', system-ui, -apple-system, sans-serif;
+      color: white;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-color: #000;
+    }
+
+    /* CAPAS DE FONDO CON TRANSICIÓN */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      transition: opacity 1.4s ease-in-out;
+    }
+
+    .bg-layer.bg-default {
+      background: linear-gradient(180deg, #000000 0%, #000000 28%, #3a0f2e 55%, #1f2a10 80%, #2f7a1e 100%);
+      opacity: 1;
+    }
+     
+    .bg-layer.bg-elphaba {
+      background: linear-gradient(180deg, #0b8900 0%, #0b8900 35%, #3f8a2a 65%, #6b5a3a 85%, #d43fa0 100%);
+      opacity: 0;
+    }
+     
+    .bg-layer.bg-glinda {
+      background: linear-gradient(180deg, #ff00b0 0%, #ff00b0 35%, #d43fa0 65%, #6b5a3a 85%, #3f8a2a 100%);
+      opacity: 0;
+    }
+
+    body.elphaba .bg-default { opacity: 0; }
+    body.elphaba .bg-elphaba { opacity: 1; }
+     
+    body.glinda .bg-default { opacity: 0; }
+    body.glinda .bg-glinda { opacity: 1; }
+
+    /* HEADER Y NAVEGACIÓN STICKY */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      padding: 15px 40px;
+      box-sizing: border-box;
+      position: sticky;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(212, 247, 39, 0.2);
+    }
+
+    .logoseccionheader {
+      width: 130px;
+      height: auto;
+      display: block;
+    }
+
+    /* Imagen icono de Menú Hamburguesa en blanco con filter */
+    .menu-hamburguesa {
+      display: none;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      filter: invert(1);
+      z-index: 1100;
+      object-fit: contain;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      text-decoration: none;
+      color: #d4f727;
+      text-shadow: 0 0 10px #0b8900;
+    }
+
+    /* SECCIÓN PRINCIPAL / ELECCIÓN DE PERSONAJE */
+    main {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .personaje {
+      text-align: center;
+      font-weight: 300;
+      font-size: 45px;
+      margin: 40px 0 30px;
+      text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .choices {
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .choice-btn {
+      font-weight: 400;
+      font-size: 20px;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.5);
+      border: 2px solid #ffffff;
+      border-radius: 10px;
+      padding: 15px 45px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .choice-btn:hover, .choice-btn.active {
+      border-color: #d4f727;
+      color: #d4f727;
+      box-shadow: 0 0 15px rgba(212, 247, 39, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .flecha-abajo-container {
+      text-align: center;
+      margin: 60px 0 20px;
+    }
+
+    .flecha-abajo {
+      width: 40px;
+      height: auto;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 0 8px #d4f727);
+    }
+
+    .flecha-abajo:hover {
+      transform: translateY(8px);
+    }
+
+    /* GUÍA DEL UNIVERSO DE OZ */
+    .guia-seccion {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .guia-titulo {
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 25px;
+      color: #d4f727;
+      text-shadow: 0 0 12px rgba(11, 137, 0, 0.6);
+    }
+
+    .guia-botones {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      gap: 15px;
+    }
+
+    .guia-botonsinopsis, .guia-botoncontexto {
+      font-size: 18px;
+      font-weight: 600;
+      color: #FFFFFF;
+      background-color: rgba(0, 0, 0, 0.4);
+      border-radius: 10px;
+      border: 2px solid #FFFFFF;
+      padding: 10px 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .guia-botonsinopsis:hover, .guia-botoncontexto:hover,
+    .guia-botonsinopsis.btn-active, .guia-botoncontexto.btn-active {
+      border-color: #8AA11A;
+      color: #d4f727;
+      background-color: rgba(138, 161, 26, 0.2);
+    }
+
+    .guia-sinopsis, .guia-contexto {
+      width: 80%;
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 25px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .guia-sinopsis p, .guia-contexto p {
+      font-size: 20px;
+      font-weight: 300;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* MULTIMEDIA / PELÍCULAS */
+    .multimedia-seccion {
+      padding: 60px 20px;
+    }
+
+    .multimedia-titulo {
+      font-size: 42px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #ffffff;
+      text-shadow: 0 0 10px #d43fa0;
+    }
+
+    .multimedia-pelicula {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 45px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .multimedia-pelicula video {
+      width: 480px;
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+    }
+
+    .multimedia-info {
+      text-align: center;
+      flex: 1;
+    }
+
+    .multimedia-info h3 {
+      font-size: 32px;
+      font-weight: 300;
+      margin-bottom: 25px;
+    }
+
+    .multimedia-boton {
+      display: inline-block;
+      font-size: 20px;
+      font-weight: 600;
+      color: white;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      white-space: nowrap;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .multimedia-boton:hover {
+      text-decoration: none;
+      color: white;
+      transform: scale(1.05);
+    }
+
+    .boton-prime { background: linear-gradient(135deg, #00A8E1, #003057); box-shadow: 0 0 10px rgba(0,168,225,0.4); }
+    .boton-hbo { background: linear-gradient(135deg, #7B2FBF, #3d1266); box-shadow: 0 0 10px rgba(123,47,191,0.4); }
+
+    /* REPARTO CON TARJETAS INTERACTIVAS */
+    .reparto-seccion {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .reparto-titulo {
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 40px;
+    }
+
+    .reparto-principal {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+
+    .personaje-card {
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .personaje-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(212, 247, 39, 0.3);
+    }
+
+    .reparto-principal figure {
+      margin: 0;
+      width: 250px;
+      max-width: 100%;
+      text-align: center;
+    }
+
+    .reparto-principal img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1; 
+      object-fit: cover;
+      border: 3px solid;
+      border-radius: 10px;
+    }
+
+    .reparto-principal img.reparto-cynthia { border-color: #0b8900; }
+    .reparto-principal img.reparto-ariana  { border-color: #d43fa0; }
+
+    .reparto-principal figcaption { font-size: 20px; font-weight: 600; margin-top: 10px; }
+    .reparto-principal p { color: #d4f727; margin-top: 4px; font-size: 16px; }
+
+    .reparto-cinco {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .reparto-cinco .personaje-card {
+      width: 180px;
+    }
+
+    .reparto-cinco img {
+      display: block;
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #b9da11;
+    }
+
+    .reparto-cinco figcaption { font-size: 16px; font-weight: 600; margin-top: 8px; }
+    .reparto-cinco p { color: #d4f727; font-size: 14px; margin: 2px 0 0; }
+
+    /* MODAL FLOTANTE (CARTELITO) */
+    .modal-personaje {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(5px);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-contenido {
+      background: linear-gradient(135deg, #1f081c, #0a1f07);
+      padding: 30px;
+      border: 2px solid #d4f727;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 450px;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 0 30px rgba(212, 247, 39, 0.4);
+      animation: modalFade 0.3s ease-out;
+    }
+
+    @keyframes modalFade {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-contenido h3 {
+      color: #d4f727;
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    .modal-contenido p {
+      font-size: 17px;
+      line-height: 1.5;
+      color: #ffffff;
+      margin-top: 15px;
+    }
+
+    .cerrar-modal {
+      position: absolute;
+      top: 10px;
+      right: 18px;
+      color: #fff;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .cerrar-modal:hover {
+      color: #d4f727;
+    }
+
+    /* GALERÍA DE IMÁGENES */
+    .galeria-seccion {
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .galeria-titulo {
+      font-size: 42px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+
+    .carousel-inner > .item > img {
+      width: 100%;
+      max-width: 700px;
+      height: 400px;
+      object-fit: cover;
+      margin: auto;
+      border-radius: 12px;
+    }
+
+    .carousel-caption {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      padding: 5px 15px;
+      bottom: 20px;
+    }
+
+    /* FOOTER */
+    .footer {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid #d4f727;
+      background: rgba(0,0,0,0.9);
+      margin-top: 60px;
+    }
+
+    .footer-aviso {
+      max-width: 700px;
+      margin: 0 auto 20px;
+      font-size: 13px;
+      color: #ccc;
+    }
+
+    .footer-redes-titulo {
+      margin-bottom: 15px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #d4f727;
+    }
+
+    .footer-redes {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      gap: 20px;
+    }
+
+    .footer-redes a {
+      display: flex;
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s;
+    }
+
+    .footer-redes a:hover {
+      background: #d4f727;
+    }
+
+    .footer-redes svg {
+      width: 22px;
+      height: 22px;
+      fill: #ffffff;
+    }
+
+    .footer-redes a:hover svg {
+      fill: #000000;
+    }
+
+    /* CURSOR DE DESTELLOS MÁGICOS */
+    .sparkle {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      pointer-events: none;
+      background: radial-gradient(circle, #fff, #ffd700, transparent);
+      box-shadow: 0 0 8px 2px #d4f727;
+      border-radius: 50%;
+      animation: sparkle-fade 0.6s ease-out forwards;
+      z-index: 9999;
+    }
+    
+    @keyframes sparkle-fade {
+      0%   { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0) translateY(-15px); }
+    }
+
+    /* RESPONSIVE EN CELULARES */
+    @media (max-width: 768px) {
+      header {
+        padding: 12px 20px;
+      }
+
+      .logoseccionheader {
+        width: 100px;
+      }
+
+      /* Mostrar Menú Hamburguesa */
+      .menu-hamburguesa {
+        display: block;
+      }
+
+      nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.95);
+        border-bottom: 2px solid #d4f727;
+      }
+
+      nav.active {
+        display: block;
+      }
+
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      nav ul li {
+        margin: 12px 0;
+      }
+
+      .personaje { font-size: 28px; }
+      .choice-btn { width: 80%; padding: 12px 20px; font-size: 16px; }
+
+      .guia-titulo, .multimedia-titulo, .reparto-titulo, .galeria-titulo { font-size: 28px; }
+      .guia-sinopsis, .guia-contexto { width: 95%; padding: 15px; }
+      .guia-sinopsis p, .guia-contexto p { font-size: 15px; }
+
+      .multimedia-pelicula {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .multimedia-info h3 { font-size: 22px; margin-bottom: 15px; }
+      .multimedia-boton { font-size: 16px; padding: 10px 22px; }
+
+      .reparto-principal figure { width: 140px; }
+      .reparto-cinco .personaje-card { width: 130px; }
+      .reparto-cinco img { height: 130px; }
+
+      .carousel-inner > .item > img {
+        height: 240px;
+      }
+    }
+  </style>
+</head>
+
+<body id="body">
+  <!-- CAPAS DE FONDO PARA EL CAMBIO DINÁMICO DE PERSONAJE -->
+  <div class="bg-layer bg-default"></div>
+  <div class="bg-layer bg-elphaba"></div>
+  <div class="bg-layer bg-glinda"></div>
+
+  <!-- HEADER STICKY -->
+  <header>
+    <div class="logo">
+      <!-- Logo SVG inline para garantiazar la visualización -->
+      <svg class="logoseccionheader" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+        <text x="10" y="45" font-family="'Cinzel', serif, sans-serif" font-size="42" font-weight="bold" fill="#d4f727" letter-spacing="4">WICKED</text>
+      </svg>
+    </div>
+
+    <!-- Menú Hamburguesa en Blanco usando filter: invert(1) -->
+    <svg class="menu-hamburguesa" id="menu-hamburguesa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+
+    <nav id="nav-menu">
+      <ul>
+        <li><a href="#guia">Guía</a></li>
+        <li><a href="#peliculas">Películas</a></li>
+        <li><a href="#reparto">Reparto</a></li>
+        <li><a href="#galeria">Galería</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- SELECCIÓN DE PERSONAJE -->
+    <h1 class="personaje">Elegí a tu personaje</h1>
+    <div class="choices">
+      <button class="choice-btn" id="btn-elphaba">Elphaba</button>
+      <button class="choice-btn" id="btn-glinda">Glinda</button>
+    </div>
+
+    <div class="flecha-abajo-container">
+      <a href="#guia" aria-label="Ir a la guía">
+        <svg class="flecha-abajo" viewBox="0 0 24 24" fill="none" stroke="#d4f727" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <!-- GUÍA DEL UNIVERSO DE OZ -->
+    <section class="guia-seccion" id="guia">
+      <h2 class="guia-titulo">Guía del Universo de Oz</h2>
+      <div class="guia-botones">
+        <button class="guia-botonsinopsis btn-active" id="btn-sinopsis" onclick="mostrarSinopsis()">SINÓPSIS</button>
+        <button class="guia-botoncontexto" id="btn-contexto" onclick="mostrarContexto()">CONTEXTO</button>
+      </div>
+      <article class="guia-sinopsis" id="guia-sinopsis">
+        <p>En la Universidad de Shiz, Elphaba y Glinda forjan una inesperada amistad mientras descubren los oscuros secretos del Mago de Oz. Tiempo después, tras tomar caminos distintos, deberán reencontrarse para luchar por el futuro de Oz y poner a prueba su vínculo.</p>
+      </article>
+      <article class="guia-contexto" id="guia-contexto" style="display: none;">
+        <p>Wicked es una adaptación cinematográfica del famoso musical de Broadway con música de Stephen Schwartz y libreto de Winnie Holzman. Esta obra se basa en la novela de Gregory Maguire, quien reimaginó el universo de El maravilloso mago de Oz de L. Frank Baum.</p>
+      </article>
+    </section>
+
+    <!-- PELÍCULAS -->
+    <section class="multimedia-seccion" id="peliculas">
+      <h2 class="multimedia-titulo">Películas</h2>
+
+      <article class="multimedia-pelicula">
+        <video controls poster="https://placehold.co/600x350/0b8900/ffffff?text=Wicked+(2024)">
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
+          Tu navegador no soporta la reproducción de vídeos.
+        </video>
+        <div class="multimedia-info">
+          <h3>Wicked (2024)</h3>
+          <a class="multimedia-boton boton-prime" href="https://www.primevideo.com" target="_blank" rel="noopener">Ver en Prime Video</a>
+        </div>
+      </article>
+
+      <article class="multimedia-pelicula">
+        <video controls poster="https://placehold.co/600x350/d43fa0/ffffff?text=Wicked:+For+Good+(2025)">
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4" type="video/mp4">
+          Tu navegador no soporta la reproducción de vídeos.
+        </video>
+        <div class="multimedia-info">
+          <h3>Wicked: For Good (2025)</h3>
+          <a class="multimedia-boton boton-hbo" href="https://www.hbomax.com" target="_blank" rel="noopener">Ver en HBO Max</a>
+        </div>
+      </article>
+
+      <article class="multimedia-pelicula">
+        <video controls poster="https://placehold.co/600x350/3a0f2e/ffffff?text=Wicked:+One+Wonderful+Night">
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4" type="video/mp4">
+          Tu navegador no soporta la reproducción de vídeos.
+        </video>
+        <div class="multimedia-info">
+          <h3>Wicked: One Wonderful Night (2025)</h3>
+          <a class="multimedia-boton boton-hbo" href="https://www.hbomax.com" target="_blank" rel="noopener">Ver en HBO Max</a>
+        </div>
+      </article>
+    </section>
+
+    <!-- REPARTO -->
+    <section class="reparto-seccion" id="reparto">
+      <h2 class="reparto-titulo">Reparto</h2>
+      
+      <div class="reparto-principal">
+        <figure class="personaje-card" data-nombre="Cynthia Erivo" data-desc="Interpreta a Elphaba Thropp, una joven incomprendida por su piel verde que posee un extraordinario talento mágico no descubierto.">
+          <img class="reparto-cynthia" src="https://placehold.co/300x300/0b8900/ffffff?text=Cynthia+Erivo" alt="Cynthia Erivo">
+          <figcaption>Cynthia Erivo</figcaption>
+          <p>Elphaba Thropp</p>
+        </figure>
+
+        <figure class="personaje-card" data-nombre="Ariana Grande" data-desc="Interpreta a Glinda Upland, una joven popular, ambiciosa y privilegiada que busca encontrar su verdadero propósito.">
+          <img class="reparto-ariana" src="https://placehold.co/300x300/d43fa0/ffffff?text=Ariana+Grande" alt="Ariana Grande">
+          <figcaption>Ariana Grande</figcaption>
+          <p>Glinda Upland</p>
+        </figure>
+      </div>
+
+      <div class="reparto-secundario">
+        <div class="reparto-cinco">
+          <div class="personaje-card" data-nombre="Jonathan Bailey" data-desc="Interpreta a Fiyero Tigelaar, el despreocupado y apuesto príncipe que revoluciona la Universidad de Shiz.">
+            <img src="https://placehold.co/200x200/222222/d4f727?text=Jonathan+Bailey" alt="Jonathan Bailey">
+            <figcaption>Jonathan Bailey</figcaption>
+            <p>Fiyero</p>
+          </div>
+          <div class="personaje-card" data-nombre="Michelle Yeoh" data-desc="Interpreta a Madame Morrible, la imponente y astuta decana de estudios mágicos en la Universidad de Shiz.">
+            <img src="https://placehold.co/200x200/222222/d4f727?text=Michelle+Yeoh" alt="Michelle Yeoh">
+            <figcaption>Michelle Yeoh</figcaption>
+            <p>Madame Morrible</p>
+          </div>
+          <div class="personaje-card" data-nombre="Jeff Goldblum" data-desc="Interpreta al legendario Mago de Oz, el misterioso gobernante de la Ciudad de Esmeralda.">
+            <img src="https://placehold.co/200x200/222222/d4f727?text=Jeff+Goldblum" alt="Jeff Goldblum">
+            <figcaption>Jeff Goldblum</figcaption>
+            <p>El Mago de Oz</p>
+          </div>
+          <div class="personaje-card" data-nombre="Ethan Slater" data-desc="Interpreta a Boq, un entrañable estudiante Munchkin enamorado de Glinda.">
+            <img src="https://placehold.co/200x200/222222/d4f727?text=Ethan+Slater" alt="Ethan Slater">
+            <figcaption>Ethan Slater</figcaption>
+            <p>Boq</p>
+          </div>
+          <div class="personaje-card" data-nombre="Marissa Bode" data-desc="Interpreta a Nessarose Thropp, la consentida hermana menor de Elphaba.">
+            <img src="https://placehold.co/200x200/222222/d4f727?text=Marissa+Bode" alt="Marissa Bode">
+            <figcaption>Marissa Bode</figcaption>
+            <p>Nessarose</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALERÍA / CARRUSEL -->
+    <section class="galeria-seccion" id="galeria">
+      <h2 class="galeria-titulo">Galería</h2>
+      <div id="theCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#theCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#theCarousel" data-slide-to="1"></li>
+          <li data-target="#theCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <div class="carousel-inner" role="listbox">
+          <div class="item active">
+            <img src="https://placehold.co/700x400/0b8900/ffffff?text=Universidad+de+Shiz" alt="Shiz">
+            <div class="carousel-caption">
+              <p>Universidad de Shiz</p>
+            </div>
+          </div>
+          <div class="item">
+            <img src="https://placehold.co/700x400/d43fa0/ffffff?text=Ciudad+de+Esmeralda" alt="Esmeralda">
+            <div class="carousel-caption">
+              <p>Ciudad de Esmeralda</p>
+            </div>
+          </div>
+          <div class="item">
+            <img src="https://placehold.co/700x400/3a0f2e/ffffff?text=Elphaba+y+Glinda" alt="Amigas">
+            <div class="carousel-caption">
+              <p>Un vínculo indestructible</p>
+            </div>
+          </div>
+        </div>
+
+        <a class="left carousel-control" href="#theCarousel" role="button" data-slide="prev">
+          <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+          <span class="sr-only">Anterior</span>
+        </a>
+        <a class="right carousel-control" href="#theCarousel" role="button" data-slide="next">
+          <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+          <span class="sr-only">Siguiente</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="contacto">
+    <p class="footer-aviso">Wicked y todos sus personajes son marcas registradas de Universal Pictures. Página creada con fines de exhibición.</p>
+    <p class="footer-redes-titulo">Seguí las redes oficiales de Wicked</p>
+    <ul class="footer-redes">
+      <li>
+        <a href="https://www.instagram.com/wickedmovie/" target="_blank" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+      </li>
+      <li>
+        <a href="https://www.facebook.com/wickedmovie/" target="_blank" aria-label="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z"/></svg>
+        </a>
+      </li>
+    </ul>
+  </footer>
+
+  <!-- MODAL / CARTELITO DE DESCRIPCIÓN -->
+  <div id="modal-personaje" class="modal-personaje">
+    <div class="modal-contenido">
+      <span class="cerrar-modal" id="cerrar-modal">&times;</span>
+      <h3 id="modal-titulo">Nombre</h3>
+      <p id="modal-texto">Descripción del personaje...</p>
+    </div>
+  </div>
+
+  <script>
+    // CAMBIO DINÁMICO DE PERSONAJE Y FONDO
+    const body = document.getElementById('body');
+    const btnElphaba = document.getElementById('btn-elphaba');
+    const btnGlinda = document.getElementById('btn-glinda');
+
+    function resetState() {
+      body.classList.remove('elphaba', 'glinda');
+      btnElphaba.classList.remove('active');
+      btnGlinda.classList.remove('active');
+    }
+
+    btnElphaba.addEventListener('click', () => {
+      if (body.classList.contains('elphaba')) {
+        resetState();
+      } else {
+        resetState();
+        body.classList.add('elphaba');
+        btnElphaba.classList.add('active');
+      }
+    });
+
+    btnGlinda.addEventListener('click', () => {
+      if (body.classList.contains('glinda')) {
+        resetState();
+      } else {
+        resetState();
+        body.classList.add('glinda');
+        btnGlinda.classList.add('active');
+      }
+    });
+
+    // MOSTRAR U OCULTAR SINÓPSIS / CONTEXTO
+    const btnSinopsis = document.getElementById("btn-sinopsis");
+    const btnContexto = document.getElementById("btn-contexto");
+    const guiaSinopsis = document.getElementById("guia-sinopsis");
+    const guiaContexto = document.getElementById("guia-contexto");
+
+    function mostrarSinopsis() {
+      guiaSinopsis.style.display = "block";
+      guiaContexto.style.display = "none";
+      btnSinopsis.classList.add("btn-active");
+      btnContexto.classList.remove("btn-active");
+    }
+
+    function mostrarContexto() {
+      guiaSinopsis.style.display = "none";
+      guiaContexto.style.display = "block";
+      btnSinopsis.classList.remove("btn-active");
+      btnContexto.classList.add("btn-active");
+    }
+
+    // MENÚ HAMBURGUESA DESPLEGABLE EN CELULAR
+    const menuBtn = document.getElementById('menu-hamburguesa');
+    const navMenu = document.getElementById('nav-menu');
+
+    if (menuBtn && navMenu) {
+      menuBtn.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+      });
+
+      document.querySelectorAll('nav ul li a').forEach(link => {
+        link.addEventListener('click', () => {
+          navMenu.classList.remove('active');
+        });
+      });
+    }
+
+    // MODAL DE PERSONAJES
+    const modal = document.getElementById('modal-personaje');
+    const modalTitulo = document.getElementById('modal-titulo');
+    const modalTexto = document.getElementById('modal-texto');
+    const cerrarModal = document.getElementById('cerrar-modal');
+
+    document.querySelectorAll('.personaje-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const nombre = card.getAttribute('data-nombre');
+        const desc = card.getAttribute('data-desc');
+        if (modal && modalTitulo && modalTexto) {
+          modalTitulo.textContent = nombre;
+          modalTexto.textContent = desc;
+          modal.style.display = 'flex';
+        }
+      });
+    });
+
+    if (cerrarModal && modal) {
+      cerrarModal.addEventListener('click', () => {
+        modal.style.display = 'none';
+      });
+
+      window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    }
+
+    // EFECTO MÁGICO DE CHISPAS EN EL CURSOR
+    document.addEventListener('mousemove', (e) => {
+      const sparkle = document.createElement('div');
+      sparkle.className = 'sparkle';
+      sparkle.style.left = (e.clientX - 4) + 'px';
+      sparkle.style.top = (e.clientY - 4) + 'px';
+      document.body.appendChild(sparkle);
+      setTimeout(() => sparkle.remove(), 600);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,555 @@
+@font-face {
+    font-family: 'OpenSauceSans-Regular';
+    src: url('OpenSauceOne-Regular.ttf');
+  }
+
+  html {
+  scroll-behavior: smooth;
+}
+
+/* cuerpo de la página */
+body {
+  font-family: 'OpenSauceSans-Regular', sans-serif;
+  color: white;
+  background: linear-gradient(
+    black 0%,
+    #000000 28%,
+    #3a0f2e 55%,
+    #1f2a10 80%,
+    #2f7a1e 100%
+    );
+  min-height: 100vh;
+  overflow-x: hidden;
+
+}
+
+.bg-layer.bg-default {
+  background: linear-gradient(180deg, #000000 0%, #000000 28%, #000000 55%, #3a0f2e 80%, #0b8900 100%);
+  opacity: 1;
+}
+ 
+.bg-layer.bg-elphaba {
+  background: linear-gradient(180deg, #0b8900 0%, #0b8900 35%, #3f8a2a 65%, #6b5a3a 85%, #d43fa0 100%);
+  opacity: 0;
+}
+ 
+.bg-layer.bg-glinda {
+  background: linear-gradient(180deg, #ff00b0 0%, #ff00b0 35%, #d43fa0 65%, #6b5a3a 85%, #3f8a2a 100%);
+  opacity: 0;
+}
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  transition: opacity 1.4s ease-in-out;
+}
+ 
+body.elphaba .bg-default { opacity: 0; }
+body.elphaba .bg-elphaba { opacity: 1; }
+ 
+body.glinda .bg-default { opacity: 0; }
+body.glinda .bg-glinda { opacity: 1; }
+
+/* menuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  width: 100%;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+    top: 0;
+  z-index: 1000; 
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 10px 20px;
+}
+
+.logoseccionheader {
+  width: 150px;
+  height: auto;
+  display: block;
+  margin-left: 60px;
+}
+
+
+.menu-hamburguesa {
+      display: none;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      filter: invert(1);
+      z-index: 1100;
+      object-fit: contain;
+    }
+
+nav.active {
+        display: block;
+      }
+
+.menu-hamburguesa {
+  display: none;
+}
+
+/* En celulares y pantallas pequeñas (menos de 768px) */
+@media (max-width: 768px) {
+  .menu-hamburguesa {
+    display: block; /* Muestra la imagen en celulares */
+    width: 32px;
+    height: auto;
+    cursor: pointer;
+    z-index: 1100;
+  }
+
+  /* El menú en celular arranca oculto (display: none) */
+  nav {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    border-bottom: 2px solid #d4f727;
+    z-index: 1000;
+  }
+
+  /* Esta clase la activa JavaScript al hacer clic en la imagen */
+  nav.active {
+    display: block;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+    margin: 0;
+    list-style: none;
+  }
+
+  nav ul li {
+    margin: 15px 0;
+  }
+}
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin: 35px;
+}
+
+nav ul li a,
+nav ul li a:hover {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 20px green;
+}
+
+/* botonessssssssssssssssss */
+main {
+  padding: 10px;
+}
+
+.menu-hamburguesa {
+  display: none; /* Oculto por defecto en computadoras */
+  width: 35px;   /* Podés ajustar el tamaño acá si lo querés más grande o más chico */
+  height: auto;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+.personaje {
+  text-align: center;
+  font-weight: 300;
+  font-size: 50px;
+  margin-bottom: 56px;
+}
+
+.choices {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.choice-btn {
+  font-weight: 300;
+  font-size: 22px;
+  color: #ffffff;
+  background: transparent;
+  border: 2px solid #ffffff;
+  border-radius: 10px;
+  padding: 22px 60px;
+  cursor: pointer;
+}
+
+
+/*fuente: https://codyhouse.co/nuggets/css-gradient-borders*/
+.choice-btn:hover{
+    border: 2px solid #d4f727;
+}
+
+.flecha-abajo-container {
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 20px;
+}
+
+.flecha-abajo {
+  width: 45px;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.flecha-abajo:hover {
+  transform: translateY(6px);
+}
+
+/* guia del universo de OZZZZZZZZZZZZ */
+.guia-seccion {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.guia-titulo {
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.guia-botones {
+    display: flex;
+    justify-content: center;
+    margin: 30px 0;
+}
+
+.guia-botonsinopsis, .guia-botoncontexto {
+    font-size: 20px;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: transparent;
+    border-radius: 10px;
+    border: 2px solid #FFFFFF;
+    padding: 10px 30px;
+    margin: 0 15px;
+}
+
+.guia-botonsinopsis:hover, .guia-botoncontexto:hover {
+    border: 2px solid #8AA11A;
+}
+
+.guia-sinopsis, .guia-contexto {
+    width: 60%;
+    margin: 0 auto;
+}
+
+.guia-sinopsis p, .guia-contexto p {
+    font-size: 24px;
+    font-weight: 300;
+}
+
+/* MULTIMEDIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA */
+.multimedia-seccion {
+padding: 60px 20px;
+text-align: center;
+}
+
+.multimedia-titulo {
+    font-size: 50px;
+    font-weight: 600;
+    text-align: center;
+
+}
+
+.multimedia-pelicula {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+}
+
+.multimedia-pelicula video {
+    width: 560px;
+    max-width: 100%;
+    height: auto;
+}
+
+.multimedia-info {
+    text-align: center;
+}
+
+.multimedia-info h3 {
+    font-size: 40px;
+    font-weight: 300;
+    margin-bottom: 20px;
+}
+
+/* botones de plataformasssssss */
+.multimedia-boton,
+.multimedia-boton:hover,
+.multimedia-boton:focus {
+    display: inline-block;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
+    text-decoration: none;
+    padding: 15px 40px;
+    border-radius: 200px;
+    white-space: nowrap;
+}
+
+.boton-prime {background: linear-gradient(to right, #3a1ce3, #7c9dc4);}
+.boton-prime:hover {background: #5495ef; }
+
+.boton-hbo {background: linear-gradient(to right, #7B2FBF, #b75bde);}
+.boton-hbo:hover { background: #A855F7; }
+
+/* repartoooo */
+.reparto-seccion {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.reparto-titulo {
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.reparto-seccion {
+    padding: 80px 40px;
+}
+
+.reparto-titulo {
+    font-size: 50px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.reparto-principal {
+     display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+ .personaje-card {
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 12px;
+    }
+
+    .personaje-card:hover {
+      transform: translateY(-8px) scale(1.03);
+      box-shadow: 0 10px 20px rgba(212, 247, 39, 0.3);
+    }
+
+    .reparto-principal figure {
+      margin: 0;
+      width: 250px;
+      max-width: 100%;
+      text-align: center;
+    }
+
+    .reparto-principal img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1; 
+      object-fit: cover;
+      border: 3px solid;
+      border-radius: 10px;
+    }
+.reparto-principal img.reparto-cynthia { border-color: #0b8900; }
+.reparto-principal img.reparto-ariana  { border-color: #d43fa0; }
+
+    .reparto-principal figcaption { font-size: 20px; font-weight: 600; margin-top: 10px; }
+    .reparto-principal p { color: #d4f727; margin-top: 4px; font-size: 16px; }
+
+.reparto-cinco {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.reparto-cinco .personaje-card {
+  width: 200px;
+}
+
+.reparto-cinco img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 8px;
+  border-color: 3px #b9da11;
+}
+
+.reparto-cinco figcaption { font-size: 18px; font-weight: 600; margin-top: 8px; }
+.reparto-cinco p { color: #8AA11A;}
+
+.modal-personaje {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background: linear-gradient(135deg, #2a0823, #152611);
+  padding: 30px;
+  border: 2px solid #d4f727;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 0 25px rgba(212, 247, 39, 0.4);
+}
+
+.modal-contenido h3 {
+  color: #d4f727;
+  margin-top: 0;
+  font-size: 28px;
+}
+
+.modal-contenido p {
+  font-size: 18px;
+  line-height: 1.5;
+  color: #ffffff;
+  margin-top: 15px;
+}
+
+.cerrar-modal {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cerrar-modal:hover {
+  color: #d4f727;
+}
+
+/* galeeeeeeeeeeeeeeeeeria */
+
+.galeria-seccion {
+    padding: 80px 40px;
+    text-align: center;
+}
+
+.galeria-titulo {
+    font-size: 50px;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      width: 100%;
+    max-width: 700px;
+    height: 400px;
+    object-fit: cover;
+    margin: auto;
+    border-radius: 12px;
+  }
+
+@media (max-width: 768px) {
+  .carousel-inner > .item > img,
+  .carousel-inner > .item > a > img {
+      height: 240px; /* Reduce la altura en pantallas chicas */
+  }
+}
+
+.footer {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 40px 40px 30px;
+  text-align: center;
+  border-top: 1px solid #d4f727;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.footer-aviso {
+  max-width: 700px;
+  margin: 0 0 24px;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.footer-redes-titulo {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.footer-redes {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-redes li {
+  margin: 0 15px;
+}
+
+.footer-redes a {
+  display: block;
+  width: 48px;
+  height: 48px;
+}
+
+.footer-redes img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+  /*fuente del mouse: https://webdesign.tutsplus.com/javascript-sparkle-cursor--cms-109158t*/
+  .sparkle {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    pointer-events: none;
+    background: radial-gradient(circle, #fff, #ffd700, transparent);
+    box-shadow: 0 0 6px 2px #ffd700;
+    animation: sparkle-fade 0.6s ease-out forwards;
+  }
+  
+  @keyframes sparkle-fade {
+    0%   { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(0) translateY(-15px); }
+  }
+
+ @media (max-width: 768px) {
+  .menu-hamburguesa {
+    display: block;
+  }
+}
